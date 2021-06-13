@@ -1,3 +1,4 @@
+import 'package:arogga_copy/model/home_item.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -43,9 +44,26 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget homeBody() {
+    final items = getPulseAximeterList();
+    final diabeticItems = getDiabeticMeter();
     return Container(
-      child: ListView(
-        children: [carousel(), getListview()],
+        child: ListView(
+      children: [
+        carousel(),
+        getCategoryTitle('Covid 19 Special'),
+        getListview(items),
+        getCategoryTitle('Diabetic Care'),
+        getListview(diabeticItems),
+      ],
+    ));
+  }
+
+  Widget getCategoryTitle(String title) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
       ),
     );
   }
@@ -67,7 +85,81 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget getListview() {
-    return Container();
+  Widget getListview(List<HomeItem> items) {
+    return Container(
+      height: 300,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return listItem(context, items[index]);
+          }),
+    );
+  }
+
+  List<HomeItem> getPulseAximeterList() {
+    List<HomeItem> items = [];
+    for (int i = 0; i < 10; i++) {
+      HomeItem item = HomeItem(
+          'Fingertip pulse oximeter JPD-500E',
+          'https://aleefsurgical.com/wp-content/uploads/2020/08/613Ufa2NwL._AC_SX679_.jpg',
+          '1500',
+          '1700',
+          '10');
+      items.add(item);
+    }
+    return items;
+  }
+
+  List<HomeItem> getDiabeticMeter() {
+    List<HomeItem> items = [];
+    for (int i = 0; i < 10; i++) {
+      HomeItem item = HomeItem(
+          'Care Touch Diabetes Testing Kit –',
+          'https://images-na.ssl-images-amazon.com/images/I/71grSBGh9LL._AC_SX466_.jpg',
+          '1500',
+          '1700',
+          '20');
+      items.add(item);
+    }
+    return items;
+  }
+
+  Widget listItem(BuildContext context, HomeItem item) {
+    return Container(
+      height: 200,
+      width: 150,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  child: Text(
+                    '${item.discount}% OFF',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  padding: EdgeInsets.all(5),
+                  color: Colors.green.shade700),
+              Expanded(child: Image.network(item.productUrl)),
+              Text(
+                item.productName,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '৳${item.oldPrice}',
+                style: TextStyle(decoration: TextDecoration.lineThrough),
+              ),
+              Text('৳${item.price}'),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
